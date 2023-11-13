@@ -218,6 +218,7 @@ public class TemplateServiceImpl implements TemplateService {
 
             if("table".equals( templetFile.getType() )){
                 dataModel.put("table", templetFile.getTable());
+                dataModel.put("db", templetFile.getSchema());
             }
             if("db".equals( templetFile.getType() )){
                 dataModel.put("db", templetFile.getSchema());
