@@ -1,0 +1,8 @@
+ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+   ${base.basePackage}.security.service.impl.LoginServiceImpl,\
+   ${base.basePackage}.security.service.impl.UserDetailsServiceImpl,\
+   ${base.basePackage}.security.properties.SecurityConfigProperties,\
+   ${base.basePackage}.security.properties.TokenProperties,\
+   ${base.basePackage}.security.core.TokenAuthorizationManager,\
+   ${base.basePackage}.security.config.SecurityConfig,\
+   ${base.basePackage}.security.web.LoginController

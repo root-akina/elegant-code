@@ -1,0 +1,21 @@
+package ${base.basePackage}.service;
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import ${base.basePackage}.entity.${table.className}Entity;
+import ${base.basePackage}.vo.Pager;
+import ${base.basePackage}.vo.${table.className}VO;
+import java.util.List;
+
+public interface ${table.className}Service extends IService<${table.className}Entity> {
+
+    List<${table.className}VO> findList(${table.className}VO ${table.varName}Vo);
+
+    Pager<${table.className}VO> findPage(long pageIndex, long pageSize, ${table.className}VO ${table.varName}Vo);
+
+    ${table.className}VO findById( ${table.keyType} id );
+
+    boolean add(${table.className}VO ${table.varName}Vo);
+
+    boolean update(${table.keyType} id ,${table.className}VO ${table.varName}Vo);
+
+}

@@ -1,0 +1,94 @@
+package ${base.basePackage}.project.service.impl;
+
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import ${base.basePackage}.project.vo.${table.className}VO;
+import com.google.common.base.Strings;
+import ${base.basePackage}.project.mapper.${table.className}Mapper;
+import ${base.basePackage}.project.entity.${table.className}Entity;
+import ${base.basePackage}.project.service.${table.className}Service;
+import ${base.basePackage}.project.vo.Pager;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+@Service
+public class ${table.className}ServiceImpl extends ServiceImpl<${table.className}Mapper,${table.className}Entity> implements ${table.className}Service{
+
+
+    @Override
+    public List<${table.className}VO> findList(${table.className}VO ${table.varName}Vo) {
+        LambdaQueryWrapper<${table.className}Entity> qw = createLambdaQueryWrapper(${table.varName}Vo);
+        List<${table.className}Entity> list = list(qw);
+        return list.stream().map(${table.varName}Entity -> {
+            ${table.className}VO ${table.varName} = new ${table.className}VO();
+            BeanUtils.copyProperties(${table.varName}Entity, ${table.varName});
+            return ${table.varName};
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public Pager<${table.className}VO> findPage(long pageIndex, long pageSize, ${table.className}VO ${table.varName}Vo) {
+
+        Page p = new Page<${table.className}Entity>(pageIndex,pageSize);
+        LambdaQueryWrapper<${table.className}Entity> qw = createLambdaQueryWrapper(${table.varName}Vo);
+        Page<${table.className}Entity> page = this.page(p, qw);
+        Pager<${table.className}Entity> ${table.className}Page = Pager.build(page);
+
+        List<${table.className}VO> ${table.varName}VoList = ${table.className}Page.getRecords().stream().map(${table.varName}Entity -> {
+            ${table.className}VO ${table.varName} = new ${table.className}VO();
+            BeanUtils.copyProperties(${table.varName}Entity, ${table.varName});
+            return ${table.varName};
+        }).collect(Collectors.toList());
+
+        return Pager.build(${table.className}Page, ${table.varName}VoList);
+
+    }
+
+    @Override
+    public ${table.className}VO findById(${table.keyType} id) {
+        ${table.className}Entity ${table.varName}Entity = getById(id);
+        ${table.className}VO ${table.varName}Vo=new ${table.className}VO();
+        BeanUtils.copyProperties( ${table.varName}Entity, ${table.varName}Vo);
+        return ${table.varName}Vo;
+    }
+
+    private LambdaQueryWrapper<${table.className}Entity> createLambdaQueryWrapper(${table.className}VO ${table.varName}Vo){
+        LambdaQueryWrapper<${table.className}Entity> qw = new LambdaQueryWrapper<${table.className}Entity>();
+      <#foreach column in table.columns>
+	<#if column.propertyType=="String" >
+        if(!Strings.isNullOrEmpty(${table.varName}Vo.get${column.property2}())){
+            qw.like(${table.className}Entity::get${column.property2},"%"+${table.varName}Vo.get${column.property2}()+"%");
+        }
+        </#if>
+	<#if column.propertyType=="Integer" >
+        if(${table.varName}Vo.get${column.property2}()!=null){
+            qw.eq(${table.className}Entity::get${column.property2},${table.varName}Vo.get${column.property2}());
+        }
+        </#if>
+      </#foreach>
+        return qw;
+    }
+
+
+    @Override
+    public boolean add(${table.className}VO ${table.varName}Vo) {
+        ${table.className}Entity ${table.varName}=new ${table.className}Entity();
+        BeanUtils.copyProperties( ${table.varName}Vo, ${table.varName});
+        return save( ${table.varName} );
+    }
+
+    @Override
+    public boolean update(${table.keyType} id ,${table.className}VO ${table.varName}Vo) {
+        ${table.className}Entity ${table.varName}=new ${table.className}Entity();
+        BeanUtils.copyProperties( ${table.varName}Vo, ${table.varName});
+        ${table.varName}.set${table.key2Upper}( id );
+        return updateById( ${table.varName} );
+    }
+
+
+}

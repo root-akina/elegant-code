@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>${base.basePackage}</groupId>
+    <artifactId>${base.project}-boot</artifactId>
+    <version>${extend.version}</version>
+    <modules>
+        <module>${base.project}-common</module>
+		<#if option.security=="SpringSecurity+JWT">
+        <module>${base.project}-security</module>   
+		</#if>
+		<#if option.rbac=="open">
+        <module>${base.project}-rbac</module>
+		</#if>
+		<#if option.datacache=="open">
+		<module>${base.project}-datacache</module>
+		</#if>
+		<#if option.datascope=="open">
+        <module>${base.project}-datascope</module>
+		</#if>
+		<module>${base.project}-web</module>
+    </modules>
+    <packaging>pom</packaging>
+
+    <name>${base.project}-boot</name>
+    <url>http://www.example.com</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!--easy.version-->
+        <easy.version>${extend.version}</easy.version>
+        <!--spring-cloud版本-->
+        <spring-cloud.version>2021.0.6</spring-cloud.version>
+        <!--spring-cloud-alibaba版本-->
+        <spring-cloud-alibaba.version>2021.0.1.0</spring-cloud-alibaba.version>
+        <!--spring-cloud-stream版本-->
+        <stream-rabbit.version>3.1.0</stream-rabbit.version>
+        <!--spring-boot版本-->
+        <spring.boot.version>${extend.spring_boot_varsion}</spring.boot.version>
+        <!--knife4j版本支持-->
+        <knife4j.version>3.0.3</knife4j.version>
+        <!--orika 拷贝工具 -->
+        <orika-core.version>1.5.4</orika-core.version>
+        <!--hutool工具 -->
+        <hutool.version>5.8.10</hutool.version>
+        <!--lang3-->
+        <commons.lang3.version>3.8.1</commons.lang3.version>
+        <!--kryo-->
+        <kryo.version>4.0.2</kryo.version>
+        <!--阿里支付-->
+        <alipay.easysdk.version>2.2.0</alipay.easysdk.version>
+        <!--微信支付-->
+        <wechatpay.version>0.4.8</wechatpay.version>
+        <!--guava版本 -->
+        <guava.version>23.0</guava.version>
+        <!--fastjson版本-->
+        <fastjson.version>1.2.73</fastjson.version>
+        <!--mybatis-plus版本-->
+        <mybatis-plus-boot-starter.version>3.4.0</mybatis-plus-boot-starter.version>
+        <!--druid的springboot版本配置-->
+        <druid-spring-boot-starter>1.2.1</druid-spring-boot-starter>
+        <!--druid版本配置-->
+        <druid.version>1.1.22</druid.version>
+        <!--redisson版本-->
+        <redisson-spring-boot>3.11.2</redisson-spring-boot>
+        <!--jwt版本-->
+        <jwt.version>3.8.1</jwt.version>
+        <!--jjwt版本-->
+        <jjwt.version>0.9.1</jjwt.version>
+    </properties>
+
+    <!--声明jar-->
+    <dependencyManagement>
+        <dependencies>
+            <!---spring-cloud-alibaba主配置-->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version><#noparse>${spring-cloud-alibaba.version}</#noparse></version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!---springboot主配置-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version><#noparse>${spring.boot.version}</#noparse></version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+			<!--JWT-->
+            <dependency>
+                <groupId>com.auth0</groupId>
+                <artifactId>java-jwt</artifactId>
+                <version><#noparse>${jwt.version}</#noparse></version>
+            </dependency>
+
+			
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version><#noparse>${jjwt.version}</#noparse></version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>${base.basePackage}</groupId>
+                <artifactId>${base.project}-common</artifactId>
+                <version><#noparse>${easy.version}</#noparse></version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>${base.basePackage}</groupId>
+                <artifactId>${base.project}-security</artifactId>
+                <version><#noparse>${easy.version}</#noparse></version>
+            </dependency>
+
+			<dependency>
+                <groupId>${base.basePackage}</groupId>
+                <artifactId>${base.project}-rbac</artifactId>
+                <version><#noparse>${easy.version}</#noparse></version>
+            </dependency>
+
+            <dependency>
+                <groupId>${base.basePackage}</groupId>
+                <artifactId>${base.project}-datascope</artifactId>
+                <version><#noparse>${easy.version}</#noparse></version>
+            </dependency>
+
+            <dependency>
+                <groupId>${base.basePackage}</groupId>
+                <artifactId>${base.project}-datacache</artifactId>
+                <version><#noparse>${easy.version}</#noparse></version>
+            </dependency>
+
+
+            <!-- 拷贝对象 -->
+            <dependency>
+                <groupId>ma.glasnost.orika</groupId>
+                <artifactId>orika-core</artifactId>
+                <version><#noparse>${orika-core.version}</#noparse></version>
+            </dependency>
+
+            <!--工具包-->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version><#noparse>${hutool.version}</#noparse></version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.zxing</groupId>
+                <artifactId>core</artifactId>
+                <version>3.3.3</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version><#noparse>${commons.lang3.version}</#noparse></version>
+            </dependency>
+
+            <!--fastjson-->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version><#noparse>${fastjson.version}</#noparse></version>
+            </dependency>
+
+            <!--knife4j版接口文档 访问/doc.html -->
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-spring-boot-starter</artifactId>
+                <version><#noparse>${knife4j.version}</#noparse></version>
+            </dependency>
+
+            <!--guava工具包-->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version><#noparse>${guava.version}</#noparse></version>
+            </dependency>
+
+            <!--MySQL支持-->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>8.0.19</version>
+            </dependency>
+            <!--druid的springboot配置-->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version><#noparse>${druid-spring-boot-starter}</#noparse></version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid</artifactId>
+                <version><#noparse>${druid.version}</#noparse></version>
+            </dependency>
+
+            <!--springboot关于mybatis-plus-->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version><#noparse>${mybatis-plus-boot-starter.version}</#noparse></version>
+            </dependency>
+
+            <!--代码生成器模板引擎 相关依赖-->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-generator</artifactId>
+                <version><#noparse>${mybatis-plus-boot-starter.version}</#noparse></version>
+            </dependency>
+            <!--redis缓存客户端-->
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson-spring-boot-starter</artifactId>
+                <version><#noparse>${redisson-spring-boot}</#noparse></version>
+            </dependency>
+
+ 
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-core</artifactId>
+                <version>3.4.0</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <!--jdk插件-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>${extend.jdk_version}</source>
+                    <target>${extend.jdk_version}</target>
+                </configuration>
+            </plugin>
+            <!--springboot的打包插件-->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.3.0.RELEASE</version>
+            </plugin>
+            <!-- maven-surefire-plugin ${base.projectName}包 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.4.2</version>
+                <configuration>
+                    <!-- 全局是否执行maven生命周期中的${base.projectName}：是否跳过${base.projectName} -->
+                    <skipTests>true</skipTests>
+                    <!-- 解决${base.projectName}中文乱码-->
+                    <forkMode>once</forkMode>
+                    <argLine>-Dfile.encoding=UTF-8</argLine>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

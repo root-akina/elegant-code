@@ -1,0 +1,15 @@
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: false
+          filters:
+      routes:
+<#foreach db in base.schemas>
+      - id: ${db.name}
+        uri: lb://${db.name}-service
+        predicates:
+        - Path=/${db.name}/**
+        filters:
+</#foreach>

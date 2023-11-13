@@ -1,0 +1,5 @@
+persistence:
+  title: 持久层框架
+  options:
+    - mybatisPlus
+    - mybatis

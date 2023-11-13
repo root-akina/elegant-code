@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- UserMapper.xml -->
+<mapper namespace="${base.basePackage}.project.mapper.${table.className}Mapper">
+
+    <resultMap type="${base.basePackage}.project.entity.${table.className}Entity" id="${table.className}Result">
+	  <#foreach column in table.columns>
+        <result column="${column.name}" property="${column.property}" />
+      </#foreach>
+    </resultMap>
+ 
+
+    <sql id="select${table.className}">
+        select ${table.fields} from ${table.name}
+    </sql>
+
+    <select id="select${table.className}Pool" parameterType="${base.basePackage}.project.entity.${table.className}Entity" resultMap="${table.className}Result">
+        <include refid="select${table.className}"/>
+        <where>
+           <#foreach column in table.columns> 
+		    <#if column.type=='VARCHAR' >
+                 <if test="${column.name} != null  and ${column.name} != ''"> and ${column.name} like concat('%', <#noparse>#{</#noparse>${column.name}<#noparse>}</#noparse>, '%')</if>
+            <#else>
+                 <if test="${column.name} != null "> and ${column.name} = <#noparse>#{</#noparse>${column.name}<#noparse>}</#noparse> </if>
+            </#if> 
+	       </#foreach>
+        </where>
+    </select>
+  
+
+    <select id="select${table.className}ById" parameterType="${table.keyType}" resultMap="${table.className}Result">
+        <include refid="select${table.className}"/>
+        where ${table.key} =  <#noparse>#{id}</#noparse>
+    </select>
+
+
+    <insert id="insert${table.className}" parameterType="${base.basePackage}.project.entity.${table.className}Entity" useGeneratedKeys="true" keyProperty="${table.key}">
+        insert into ${table.name}
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+           <#foreach column in table.columns> 
+		     <#if column.key==false> 
+			    <if test="${column.name} != null">${column.name},</if>
+			 </#if>
+           </#foreach>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+           <#foreach column in table.columns> 
+		     <#if column.key==false> 
+			    <if test="${column.name} != null"><#noparse>#{</#noparse>${column.name}<#noparse>}</#noparse>,</if>
+			 </#if>
+           </#foreach>
+        </trim>
+    </insert>
+
+    <update id="update${table.className}" parameterType="${base.basePackage}.project.entity.${table.className}Entity">
+        update ${table.name}
+        <trim prefix="SET" suffixOverrides=",">
+		   <#foreach column in table.columns> 
+		     <#if column.key==false> 
+				<if test="${column.name} != null">${column.name} = <#noparse>#{</#noparse>${column.name}<#noparse>}</#noparse> ,</if>
+			 </#if>
+           </#foreach>
+        </trim>
+        where ${table.key} = <#noparse>#{id}</#noparse>
+    </update>
+
+    <delete id="delete${table.className}ById" parameterType="${table.keyType}">
+        delete from ${table.name} where ${table.key} = <#noparse>#{id}</#noparse>
+    </delete>
+
+    <delete id="delete${table.className}ByIds" parameterType="String">
+        delete from ${table.name} ${table.key} in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+             <#noparse>#{id}</#noparse>
+        </foreach>
+    </delete>
+
+</mapper>

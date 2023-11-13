@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elegent Builder 【优雅代码生成器】</title>
+    <!-- 引入 Element UI 样式文件 -->
+    <link rel="stylesheet" href="css/index.css">
+
+    <style>
+          .text {
+            font-size: 14px;
+          }
+
+          .item {
+            margin-bottom: 18px;
+          }
+
+          .clearfix:before,
+          .clearfix:after {
+            display: table;
+            content: "";
+          }
+          .clearfix:after {
+            clear: both
+          }
+
+          .box-card {
+            width: 480px;
+          }
+          .tree-container {
+              max-height: 500px;
+              overflow-y: auto;
+          }
+          .custom-icon {
+              display: flex;
+              align-items: center;
+          }
+
+          .custom-icon i {
+              margin-right: 4px;
+          }
+
+          .popover-content {
+              max-height: 200px; /* 设置内容区域的最大高度 */
+              overflow: auto; /* 添加滚动条 */
+          }
+
+          .content {
+              border-right: 1px solid #ccc;
+              padding: 10px;
+          }
+
+          .fixed-height-dialog {
+              height: 650px; /* 设置固定高度为400像素 */
+          }
+
+          .card-container {
+              background-image: url('image/1.png'); /* 设置背景图路径 */
+              background-size: cover; /* 设置背景图大小适应容器 */
+              background-repeat: no-repeat; /* 禁止背景图重复 */
+              background-color: rgba(0, 0, 0, 0.9); /* 设置背景颜色和透明度 */
+            }
+    </style>
+
+</head>
+
+<body>
+
+<div id="app">
+
+    <el-steps :active="active" finish-status="success">
+        <el-step title="步骤 1"></el-step>
+        <el-step title="步骤 2"></el-step>
+    </el-steps>
+
+    <el-card v-show="active==0" >
+        <div slot="header" class="clearfix">
+            <span>连接数据库</span>
+        </div>
+        <div class="text item">
+
+            <el-row :gutter="24" >
+                <el-col :span="12">
+
+                    <el-carousel indicator-position="outside" height="500px">
+                        <el-carousel-item>
+                            <el-image src="image/1.png" ></el-image>
+                        </el-carousel-item>
+                        <el-carousel-item>
+                            <el-image src="image/2.png" ></el-image>
+                        </el-carousel-item>
+                        <el-carousel-item>
+                            <el-image src="image/3.png" ></el-image>
+                        </el-carousel-item>
+                        <el-carousel-item>
+                            <el-image src="image/4.png" ></el-image>
+                        </el-carousel-item>
+                        <el-carousel-item>
+                            <el-image src="image/5.png" ></el-image>
+                        </el-carousel-item>
+                    </el-carousel>
+
+                </el-col>
+                <el-col :span="12">
+                    <el-form :model="db" label-width="80px">
+                        <el-form-item label="选择数据库类型" label-width="200px">
+                            <el-select v-model="dbtype" placeholder="请选择" :style="{ width: '500px' }" @change="handleSelectDbChange">
+                                <el-option v-for="item in db_type_list" :key="item.name" :label="item.name" :value="item"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="IP" label-width="200px">
+                            <el-input v-model="db.ip" :style="{ width: '500px' }"></el-input>
+                        </el-form-item>
+                        <el-form-item label="端口" label-width="200px">
+                            <el-input v-model="db.port" :style="{ width: '500px' }"></el-input>
+                        </el-form-item>
+                        <el-form-item label="驱动类" label-width="200px">
+                            <el-input v-model="db.driverName" :disabled="isReadOnly" :style="{ width: '500px' }"></el-input>
+                        </el-form-item>
+                        <el-form-item label="URL" label-width="200px">
+                            <el-input v-model="db.url" :disabled="isReadOnly" :style="{ width: '500px' }"></el-input>
+                        </el-form-item>
+                        <el-form-item label="用户名" label-width="200px">
+                            <el-input v-model="db.username" :style="{ width: '500px' }"></el-input>
+                        </el-form-item>
+                        <el-form-item label="密码" label-width="200px">
+                            <el-input v-model="db.password" :style="{ width: '500px' }"></el-input>
+                        </el-form-item>
+                        <el-form-item label="" label-width="200px">
+                            <el-button type="success" round  @click="connectDb"  icon="el-icon-caret-right">连接数据库</el-button>
+                        </el-form-item>
+                    </el-form>
+                </el-col>
+            </el-row>
+        </div>
+    </el-card>
+
+    <el-card v-show="active==1">
+        <div slot="header" class="clearfix">
+            <span>项目信息录入与选择模板</span>
+        </div>
+        <div class="text item">
+            <el-form :model="base" ref="dynamicValidateForm" >
+            <el-row :gutter="24" :style="{ height: '800%' }">
+                <el-col :span="8">
+                    <el-form-item label="项目名称（中文）" inline label-width="150px" content-position="left" prop="projectName"
+                                  :rules="{required: true, message: '项目名称（中文）不能为空', trigger: 'blur' }">
+                        <el-input v-model="base.projectName" ></el-input>
+                    </el-form-item>
+                    <el-form-item label="项目名称（英文）" inline label-width="150px" content-position="left" prop="project"
+                                  :rules="{required: true, message: '项目名称（英文）不能为空', trigger: 'blur' }">
+                        <el-input v-model="base.project" ></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="基础包名" inline label-width="100px" content-position="left" prop="basePackage"
+                                  :rules="{required: true, message: '基础包名不能为空', trigger: 'blur' }">
+                        <el-input v-model="base.basePackage"  ></el-input>
+                    </el-form-item>
+
+                    <el-form-item label="生成目录" inline label-width="100px" content-position="left" prop="outputPath"
+                                  :rules="{required: true, message: '生成目录不能为空', trigger: 'blur' }">
+                        <el-input v-model="base.outputPath"  ></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="模板" inline label-width="100x" content-position="left"  prop="templateName"  :rules="{required: true, message: '请选择模板', trigger: 'blur' }">
+                        <el-select v-model="base.templateName" placeholder="请选择"  @change="handleSelectTemplateChange">
+                            <el-option
+                                    v-for="item in template_list"
+                                    :key="item"
+                                    :label="item"
+                                    :value="item">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-button type="primary" round @click="readmeVisible = true">模板说明</el-button>
+                    <el-button type="primary" round @click="dialogVisible = true">前端定制</el-button>
+                    <el-button type="success" round  @click="build()">生成代码</el-button>
+                </el-col>
+            </el-row>
+
+            <el-divider></el-divider>
+
+            <el-row :gutter="24" :style="{ height: '800%' }">
+                <el-col :span="8">
+                    <div class="grid-content bg-purple">
+                        <el-table
+                                ref="multipleTable"
+                                :data="dbList"
+                                tooltip-effect="dark"
+                                style="width: 100%"
+                                @selection-change="handleSelectionChange"
+                                max-height="450" >
+                            <el-table-column
+                                    type="selection"
+                            >
+                            </el-table-column>
+                            <el-table-column
+                                    prop="name"
+                                    label="数据库名"
+                            >
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                </el-col>
+                <el-col :span="8">
+                    <div class="grid-content bg-purple content">
+                        <el-table :data="base.optionList" >
+                            <el-table-column  label="选项" width="180px">
+                                <template slot-scope="scope">
+                                    {{ scope.row.title }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="选项值">
+                                <template slot-scope="scope">
+                                    <el-select v-model="scope.row.value" placeholder="请选择">
+                                        <el-option
+                                                v-for="item in scope.row.options"
+                                                :key="item"
+                                                :label="item"
+                                                :value="item">
+                                        </el-option>
+                                    </el-select>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                </el-col>
+
+                <el-col :span="8">
+                    <div class="grid-content bg-purple content">
+                        <el-table :data="base.extendList" >
+                            <el-table-column label="参数项" width="180px">
+                                <template slot-scope="scope">
+                                    {{ scope.row.name }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="参数值">
+                                <template slot-scope="scope">
+                                    <el-input v-model="scope.row.value" ></el-input>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                </el-col>
+            </el-row>
+            </el-form>
+        </div>
+    </el-card>
+
+    <el-dialog title="预览数据库结构" :visible.sync="dialogVisible" width="90%" >
+        <el-row :gutter="24" >
+            <el-col :span="6">
+                <div class="grid-content bg-purple tree-container">
+                    <el-tree
+                        :data="base.schemas"
+                        node-key="name"
+                        default-expand-all
+                        :props="defaultProps"  @node-click="handleNodeClick">
+                        <template v-slot="{ node, data }">
+                          <span>
+                              {{ data.name }}
+                          </span>
+                        </template>
+                    </el-tree>
+                </div>
+            </el-col>
+            <el-col :span="18">
+                <div class="grid-content bg-purple">
+                    <el-table
+                            :data="tableData"
+                            border
+                            style="width: 100%"
+                            max-height="500" >
+                        <el-table-column
+                                prop="name"
+                                label="字段名称"
+                                width="180">
+                        </el-table-column>
+                        <el-table-column
+                                prop="type"
+                                label="字段类型"
+                                width="100">
+                        </el-table-column>
+                        <el-table-column
+                                prop="size"
+                                label="长度"
+                                width="100">
+                        </el-table-column>
+                        <el-table-column
+                                label="列表显示"
+                                width="180">
+                            <template slot-scope="scope">
+                                <el-select v-model="scope.row.listControl" placeholder="请选择">
+                                    <el-option label="文本"  value="text"></el-option>
+                                    <el-option label="不显示"  value=""></el-option>
+                                </el-select>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                                label="查询条件"
+                                width="180">
+                            <template slot-scope="scope">
+                            <el-select v-model="scope.row.queryControl" placeholder="请选择">
+                                <el-option label="文本框"  value="input"></el-option>
+                                <el-option label="不显示"  value=""></el-option>
+                            </el-select>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                                label="编辑样式"
+                                width="180">
+                            <template slot-scope="scope">
+                                <el-select v-model="scope.row.editControl" placeholder="请选择">
+                                    <el-option label="文本框"  value="input"></el-option>
+                                    <el-option label="不显示"  value=""></el-option>
+                                </el-select>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                                prop="comment"
+                                label="注释">
+                        </el-table-column>
+                    </el-table>
+                </div>
+            </el-col>
+        </el-row>
+    </el-dialog>
+
+
+    <el-dialog title="模板说明文档" :visible.sync="readmeVisible" width="800px" >
+        <div>
+            <div v-html="parsedMarkdown"></div>
+        </div>
+    </el-dialog>
+
+    <el-dialog title="正在执行，请稍后......" :visible.sync="runVisible" width="350px" >
+        <img src="image/man.gif" width="300px" height="300px">
+    </el-dialog>
+
+</div>
+
+<!-- 引入 Vue.js 和 Element UI JavaScript 文件 -->
+<script src="js/vue.js"></script>
+<script src="js/element.js"></script>
+<!-- 引入 axios JavaScript 文件 -->
+<script src="js/axios.min.js"></script>
+
+
+<script>
+
+    new Vue({
+      el: '#app',
+      data: {
+        dbList: [],
+        active: 0,
+        db: {
+            ip: '127.0.0.1',
+            port:'',
+            username: '',
+            password: ''
+         },
+        dbtype : null,
+        selectionDb:[],
+        defaultProps: {
+           children: 'tables',
+           label: 'name'
+        },
+        template_list:[],
+        tableData:[],
+        idDisabledTable : true,
+        base:{
+           basePackage: '',
+           projectName: '',
+           project: '',
+           schemas:[],
+           extendList:[],
+           optionList:[]
+        },
+        db_type_list:[],
+        isReadOnly:true,
+        markdownContent: '欢迎使用ElegentBuilder',
+        parsedMarkdown: '',
+        dialogVisible: false,
+        readmeVisible: false,
+        runVisible: false
+      },
+      created() {
+         //读取数据库类型
+          axios.get('/db/dbTypeList' )
+              .then(response => {
+                this.db_type_list = response.data;
+              })
+              .catch(error => {
+                console.log(error);
+          });
+
+         //读取模板列表
+          axios.get('/template/list' )
+              .then(response => {
+                this.template_list = response.data;
+              })
+              .catch(error => {
+                console.log(error);
+          });
+      },
+      methods: {
+          next() {
+            if (this.active++ > 2) this.active = 0;
+          },
+          connectDb(){
+              axios.post('/db/schemaNames', this.db )
+              .then(response => {
+                this.dbList = response.data;
+                this.idDisabledTable = false;
+                this.next();
+              })
+              .catch(error => {
+                 this.$message({
+                      message: '无法连接数据库，请检查用户名密码是否正确',
+                      type: 'error'
+                    });
+              });
+
+          },
+          handleSelectionChange(val) {
+            this.selectionDb = val;
+            this.loadTables();
+          },
+          loadTables(){
+              axios.post('/db/showTables', {"dbConnection": this.db,"schemaList": this.selectionDb  }   )
+              .then(response => {
+                this.base.schemas = response.data;
+              })
+              .catch(error => {
+                console.log(error);
+              });
+          },
+          handleNodeClick(data) {
+             this.tableData = data.columns ;
+          },
+          build(){
+            this.$refs['dynamicValidateForm'].validate((valid) => {
+              if (valid) {
+                if(this.selectionDb.length==0){
+                     this.$message({
+                      message: '请选择数据库！',
+                      type: 'error'
+                    });
+                    return ;
+                }
+                this.runVisible = true;
+
+                axios.post('/template/build', this.base )
+                  .then(response => {
+                         this.runVisible = false;
+                        this.$message({
+                          message: '生成成功',
+                          type: 'success'
+                        });
+                  })
+                  .catch(error => {
+                    console.log(error);
+                  });
+              } else {
+                return false;
+              }
+            });
+
+          },
+          handleSelectDbChange(v) {
+              this.dbtype = v.name ;
+              this.db.url = v.url;
+              this.db.port = v.port;
+              this.db.username = v.username;
+              this.db.password = v.password;
+              this.db.driverName = v.driver;
+          },
+          handleSelectTemplateChange(v) {
+
+             axios.get('/template/params/' +v  )
+              .then(response => {
+                this.base.extendList = response.data;
+              })
+              .catch(error => {
+                console.log(error);
+             });
+
+             axios.get('/template/readme/' +v  )
+              .then(response => {
+                this.parsedMarkdown = response.data;
+              })
+              .catch(error => {
+                console.log(error);
+             });
+
+             axios.get('/template/options/' +v  )
+              .then(response => {
+                this.base.optionList = response.data;
+              })
+              .catch(error => {
+                console.log(error);
+             });
+
+          }
+      }
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,83 @@
+#服务配置
+server:
+  #端口
+  port: 8080
+  #服务编码
+  tomcat:
+    uri-encoding: UTF-8
+spring:
+  main:
+    allow-bean-definition-overriding: true
+    allow-circular-references: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  #数据源配置
+  datasource:
+    druid:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: ${db.url}
+      username: ${db.username}
+      password: ${db.password}
+  redis:
+    redisson:
+      config: classpath:singleServerConfig.yaml
+#mybatis配置
+
+<#if option.persistence="mybatis">
+# MyBatis 配置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: ${base.basePackage}.project.entity
+  configuration: 
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+</#if>
+
+<#if option.persistence="mybatisPlus">
+mybatis-plus:
+  # MyBaits 别名包扫描路径，通过该属性可以给包中的类注册别名
+  type-aliases-package: ${base.basePackage}.rbac.pojo
+  # 该配置请和 typeAliasesPackage 一起使用，如果配置了该属性，则仅仅会扫描路径下以该类作为父类的域对象 。
+  type-aliases-super-type: ${base.basePackage}.rbac.pojo.BaseEntity
+  configuration:
+    # 这个配置会将执行的sql打印出来，在开发或${base.projectName}的时候可以用
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 驼峰下划线转换
+    map-underscore-to-camel-case: true
+    use-generated-keys: true
+    default-statement-timeout: 60
+    default-fetch-size: 100
+</#if>
+
+
+logging:
+  config: classpath:logback.xml
+knife4j:
+  enable: true
+${base.project}:
+  framework:
+    swagger:
+      swagger-path: ${base.basePackage}.easy
+      title: 权限服务
+      description: 权限服务
+      contact-name: 上海黑马
+      contact-url: www.itheima.com
+      contact-email: itheima@itcast.cn
+    rbac:
+      default-password: $2a$10$XHz4Q2xIuT81jJx68IUroeRd1wFueuI86bY61cxgQ/ZLKnUohovCK
+    jwt:
+      ttl: 7
+      secret-key: itcast
+      header-name: user-token
+    security:
+      ignore-url:
+        - /index.html
+      privilege-url:
+        - /resource/list
+      privilege-user:
+        - admin
+management:
+  health:
+    rabbit:
+      enabled: false

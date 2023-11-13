@@ -1,0 +1,15 @@
+package ${base.basePackage}.project.entity;
+import lombok.*;
+
+import java.io.Serializable;
+
+@Data
+public class ${table.className}Entity implements Serializable{
+
+<#foreach column in table.columns>
+   private ${column.propertyType} ${column.property};//${column.comment}
+
+</#foreach>
+
+
+}

@@ -1,0 +1,17 @@
+ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+   ${base.basePackage}.rbac.web.UserController,\
+   ${base.basePackage}.rbac.web.RoleController,\
+   ${base.basePackage}.rbac.web.ResourceController,\
+   ${base.basePackage}.rbac.web.PostController,\
+   ${base.basePackage}.rbac.web.ExceptionController,\
+   ${base.basePackage}.rbac.web.DeptController,\
+   ${base.basePackage}.rbac.service.impl.UserServiceImpl,\
+   ${base.basePackage}.rbac.service.impl.UserRoleServiceImpl,\
+   ${base.basePackage}.rbac.service.impl.RoleServiceImpl,\
+   ${base.basePackage}.rbac.service.impl.RoleResourceServiceImpl,\
+   ${base.basePackage}.rbac.service.impl.RoleDeptServiceImpl,\
+   ${base.basePackage}.rbac.service.impl.ResourceServiceImpl,\
+   ${base.basePackage}.rbac.service.impl.PostServiceImpl,\
+   ${base.basePackage}.rbac.service.impl.DeptServiceImpl,\
+   ${base.basePackage}.rbac.service.impl.DeptPostUserServiceImpl,\
+   ${base.basePackage}.rbac.properties.RBACConfigProperties

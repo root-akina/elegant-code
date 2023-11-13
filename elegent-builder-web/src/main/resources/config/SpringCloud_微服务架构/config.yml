@@ -1,0 +1,5 @@
+version: v1.0.0
+jdk_version: '11'
+spring_cloud_version: Hoxton.SR5
+spring_cloud_alibaba_version: 2.2.6.RELEASE
+spring_boot_varsion: 2.3.1.RELEASE

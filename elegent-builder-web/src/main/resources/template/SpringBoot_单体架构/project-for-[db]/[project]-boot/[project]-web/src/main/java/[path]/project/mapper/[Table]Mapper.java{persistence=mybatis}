@@ -1,0 +1,21 @@
+package ${base.basePackage}.project.mapper;
+import ${base.basePackage}.project.entity.${table.className}Entity;
+import org.apache.ibatis.annotations.Mapper;
+import java.util.List;
+
+@Mapper
+public interface ${table.className}Mapper  {
+
+    List<${table.className}Entity> select${table.className}Pool(${table.className}Entity ${table.varName});
+
+    ${table.className}Entity select${table.className}ById(${table.keyType} id);
+
+    void insert${table.className}(${table.className}Entity ${table.varName});
+
+    void update${table.className}(${table.className}Entity ${table.varName});
+
+    void delete${table.className}ById(${table.keyType} id);
+
+    void delete${table.className}ByIds(String ids);
+
+}

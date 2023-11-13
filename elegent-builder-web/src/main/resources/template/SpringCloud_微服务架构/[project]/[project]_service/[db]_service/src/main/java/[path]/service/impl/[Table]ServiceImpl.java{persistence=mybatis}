@@ -1,0 +1,81 @@
+package ${base.basePackage}.service.impl;
+import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.PageHelper;
+import ${base.basePackage}.vo.${table.className}VO;
+import com.google.common.base.Strings;
+import ${base.basePackage}.mapper.${table.className}Mapper;
+import ${base.basePackage}.entity.${table.className}Entity;
+import ${base.basePackage}.service.${table.className}Service;
+import ${base.basePackage}.vo.Pager;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+import ${base.basePackage}.mapper.${table.className}Mapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+@Service
+public class ${table.className}ServiceImpl implements ${table.className}Service{
+
+
+	@Autowired
+	private ${table.className}Mapper  ${table.varName}Mapper ;
+
+    @Override
+    public List<${table.className}VO> findList(${table.className}VO ${table.varName}Vo) {
+		${table.className}Entity ${table.varName} =new ${table.className}Entity();
+		BeanUtils.copyProperties(${table.varName}Vo, ${table.varName});
+        List<${table.className}Entity> list = ${table.varName}Mapper.select${table.className}Pool(${table.varName});
+        
+		return list.stream().map(${table.varName}Entity -> {
+            ${table.className}VO ${table.varName}Vo2 = new ${table.className}VO();
+            BeanUtils.copyProperties(${table.varName}Entity, ${table.varName}Vo2);
+            return ${table.varName}Vo2;
+        }).collect(Collectors.toList());
+    }
+
+
+    @Override
+    public Pager<${table.className}VO> findPage(int pageIndex, int pageSize, ${table.className}VO ${table.varName}Vo) {
+        PageHelper.startPage(pageIndex, pageSize);
+        List<${table.className}VO> list = findList(${table.varName}Vo);
+        PageInfo<${table.className}VO> pageInfo = new PageInfo<>(list);
+        return Pager.build(pageInfo);
+    }
+
+
+    @Override
+    public ${table.className}VO findById(${table.keyType} id) {
+        ${table.className}Entity ${table.varName}Entity = ${table.varName}Mapper.select${table.className}ById(id);
+        ${table.className}VO ${table.varName}Vo=new ${table.className}VO();
+        BeanUtils.copyProperties( ${table.varName}Entity, ${table.varName}Vo);
+        return ${table.varName}Vo;
+    }
+
+
+    @Override
+    public boolean add(${table.className}VO ${table.varName}Vo) {
+        ${table.className}Entity ${table.varName}=new ${table.className}Entity();
+        BeanUtils.copyProperties( ${table.varName}Vo, ${table.varName});
+        ${table.varName}Mapper.insert${table.className}( ${table.varName} );
+		return true;
+    }
+
+    @Override
+    public boolean update(${table.keyType} id ,${table.className}VO ${table.varName}Vo) {
+        ${table.className}Entity ${table.varName}=new ${table.className}Entity();
+        BeanUtils.copyProperties( ${table.varName}Vo, ${table.varName});
+        ${table.varName}.set${table.key2Upper}( id );
+        ${table.varName}Mapper.update${table.className}( ${table.varName} );
+		return true;
+    }
+
+
+    @Override
+    public void removeById(${table.keyType} id) {
+        ${table.varName}Mapper.delete${table.className}ById(id);
+    }
+
+
+}

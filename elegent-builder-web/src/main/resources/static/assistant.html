@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>elegentBuilder-模板助手</title>
+    <!-- 引入 Element UI 样式文件 -->
+    <link rel="stylesheet" href="css/index.css">
+
+    <style>
+          .text {
+            font-size: 14px;
+          }
+
+          .item {
+            margin-bottom: 18px;
+          }
+
+          .clearfix:before,
+          .clearfix:after {
+            display: table;
+            content: "";
+          }
+          .clearfix:after {
+            clear: both
+          }
+
+          .box-card {
+            width: 480px;
+          }
+          .tree-container {
+              max-height: 500px;
+              overflow-y: auto;
+          }
+          .custom-icon {
+              display: flex;
+              align-items: center;
+          }
+
+          .custom-icon i {
+              margin-right: 4px;
+          }
+
+          .popover-content {
+              max-height: 200px; /* 设置内容区域的最大高度 */
+              overflow: auto; /* 添加滚动条 */
+          }
+
+          .content {
+              border-right: 1px solid #ccc;
+              padding: 10px;
+          }
+
+          .fixed-height-dialog {
+              height: 650px; /* 设置固定高度为400像素 */
+          }
+
+          .card-container {
+              background-image: url('image/1.png'); /* 设置背景图路径 */
+              background-size: cover; /* 设置背景图大小适应容器 */
+              background-repeat: no-repeat; /* 禁止背景图重复 */
+              background-color: rgba(0, 0, 0, 0.9); /* 设置背景颜色和透明度 */
+            }
+    </style>
+
+</head>
+
+<body>
+
+<div id="app">
+
+
+
+
+    <el-card>
+        <div slot="header" class="clearfix">
+            <span>模板助手</span>
+        </div>
+        <div class="text item">
+
+            <el-form :model="assistant" ref="dynamicValidateForm" >
+
+
+                <el-row :gutter="24" >
+                    <el-col :span="7">
+                        <el-form-item label="原目录" inline label-width="100px" content-position="left" prop="sourcePath"
+                                      :rules="{required: true, message: '原目录', trigger: 'blur' }">
+                            <el-input v-model="assistant.sourcePath"  ></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="7">
+                        <el-form-item label="目标目录" inline label-width="100px" content-position="left" prop="targetPath"
+                                      :rules="{required: true, message: '目标目录', trigger: 'blur' }">
+                            <el-input v-model="assistant.targetPath"  ></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="10">
+                        <el-button type="success" round  @click="build()">生成</el-button>
+                        <el-button type="primary" round  @click="saveConfig()">保存</el-button>
+                        <el-button type="primary" round  @click="loadConfig()">读取</el-button>
+                    </el-col>
+                </el-row>
+            </el-form>
+
+
+
+            <el-row :gutter="24" >
+                <el-col :span="8">
+
+                    <el-card>
+
+                        <div slot="header" class="clearfix">
+                            <span>路径替换符号</span>
+                            <el-button type="text" size="small" @click="addPathReplaceRow()" >添加</el-button>
+                        </div>
+                        <div class="text item">
+                            <el-table :data="assistant.pathReplaceList" >
+                                <el-table-column  label="代码字符" >
+                                    <template slot-scope="scope">
+                                        <el-input v-model="scope.row.sourceStr" placeholder="代码字符"></el-input>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="替换符" width="200px">
+                                    <template slot-scope="scope">
+
+                                        <el-input v-model="scope.row.targetStr" placeholder="代码字符"></el-input>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column
+                                        fixed="right"
+                                        label="操作"
+                                        width="120">
+                                    <template slot-scope="scope">
+                                        <el-button
+                                                @click.native.prevent="deleteRow(scope.$index, assistant.pathReplaceList)"
+                                                type="text"
+                                                size="small">
+                                            移除
+                                        </el-button>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </div>
+
+                    </el-card>
+                </el-col>
+                <el-col :span="8">
+
+                    <el-card>
+                        <div slot="header" class="clearfix">
+                            <span>内容替换符号列表(内置)</span>
+                            <el-button type="text" size="small" @click="addContentReplaceRow()" >添加</el-button>
+                        </div>
+                        <div class="text item">
+                            <el-table :data="assistant.contentReplaceList" >
+                                <el-table-column  label="代码字符" >
+                                    <template slot-scope="scope">
+                                        <el-input v-model="scope.row.sourceStr" placeholder="代码字符"></el-input>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="替换符" width="200px">
+                                    <template slot-scope="scope">
+                                        <el-input v-model="scope.row.targetStr" placeholder="代码字符"></el-input>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column
+                                        fixed="right"
+                                        label="操作"
+                                        width="120">
+                                    <template slot-scope="scope">
+                                        <el-button
+                                                @click.native.prevent="deleteRow(scope.$index, assistant.contentReplaceList)"
+                                                type="text"
+                                                size="small">
+                                            移除
+                                        </el-button>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </div>
+                    </el-card>
+
+                </el-col>
+
+                <el-col :span="8">
+                    <el-card>
+                        <div slot="header" class="clearfix">
+                            <span>内容替换符号列表(自定义)</span>
+                            <el-button type="text" size="small" @click="addContent2ReplaceRow()" >添加</el-button>
+                        </div>
+                        <div class="text item">
+                            <el-table :data="assistant.contentReplaceList2" >
+                                <el-table-column  label="代码字符" >
+                                    <template slot-scope="scope">
+                                        <el-input v-model="scope.row.sourceStr" placeholder="代码字符"></el-input>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="替换符" width="200px">
+                                    <template slot-scope="scope">
+                                        <el-input v-model="scope.row.targetStr" placeholder="替换符号"></el-input>
+                                    </template>
+                                </el-table-column>
+
+                                <el-table-column
+                                        fixed="right"
+                                        label="操作"
+                                        width="120">
+                                    <template slot-scope="scope">
+                                        <el-button
+                                                @click.native.prevent="deleteRow(scope.$index, assistant.contentReplaceList2)"
+                                                type="text"
+                                                size="small">
+                                            移除
+                                        </el-button>
+                                    </template>
+                                </el-table-column>
+
+                            </el-table>
+                        </div>
+                    </el-card>
+
+                </el-col>
+
+            </el-row>
+        </div>
+    </el-card>
+
+
+</div>
+
+<!-- 引入 Vue.js 和 Element UI JavaScript 文件 -->
+<script src="js/vue.js"></script>
+<script src="js/element.js"></script>
+<!-- 引入 axios JavaScript 文件 -->
+<script src="js/axios.min.js"></script>
+
+
+<script>
+
+    new Vue({
+      el: '#app',
+      data: {
+        assistant:{
+           sourcePath: '',
+           targetPath: '',
+           pathReplaceList:[
+              { sourceStr:'' ,targetStr:'[table]' },
+              { sourceStr:'' ,targetStr:'[Table]' },
+              { sourceStr:'' ,targetStr:'[path]' },
+              { sourceStr:'' ,targetStr:'[project]'},
+              { sourceStr:'' ,targetStr:'[db]' },
+              { sourceStr:'' ,targetStr:'[Db]' }
+           ],
+           contentReplaceList:[
+              { sourceStr:'' ,targetStr:'${base.basePackage}' },
+              { sourceStr:'' ,targetStr:'${base.project}' },
+              { sourceStr:'' ,targetStr:'${base.projectName}' },
+              { sourceStr:'' ,targetStr:'${base.version}' },
+              { sourceStr:'' ,targetStr:'${table.className}' },
+              { sourceStr:'' ,targetStr:'${table.varName}' }
+           ],
+           contentReplaceList2:[]
+        }
+      },
+      created() {
+
+      },
+      methods: {
+          addPathReplaceRow(){
+            this.assistant.pathReplaceList.push({});
+          },
+          addContentReplaceRow(){
+            this.assistant.contentReplaceList.push({});
+          },
+          addContent2ReplaceRow(){
+            this.assistant.contentReplaceList2.push({});
+          },
+          build(){
+            this.$refs['dynamicValidateForm'].validate((valid) => {
+              if (valid) {
+                axios.post('/assistant/build', this.assistant )
+                  .then(response => {
+                        this.$message({
+                          message: '模板生成成功',
+                          type: 'success'
+                        });
+                  })
+                  .catch(error => {
+                    console.log(error);
+                  });
+              } else {
+                return false;
+              }
+            });
+          },
+          saveConfig(){
+            localStorage.setItem('assistant', JSON.stringify( this.assistant ) );
+              this.$message({
+                          message: '保存成功',
+                          type: 'success'
+                        });
+          },
+          loadConfig(){
+            this.assistant= JSON.parse( localStorage.getItem('assistant') );
+          },
+          deleteRow(index, rows) {
+            rows.splice(index, 1);
+          }
+      }
+    });
+  </script>
+</body>
+
+</html>

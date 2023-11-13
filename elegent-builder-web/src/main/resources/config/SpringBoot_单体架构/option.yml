@@ -1,0 +1,25 @@
+persistence:
+  title: 持久层框架
+  options:
+    - mybatisPlus
+    - mybatis
+security:
+  title: 安全框架
+  options:
+    - SpringSecurity+JWT
+    - close
+rbac:
+  title: 权限代码
+  options:
+    - open
+    - close
+datascope:
+  title: 数据权限
+  options:
+    - open
+    - close
+datacache:
+  title: 数据权限缓存处理
+  options:
+    - open
+    - close

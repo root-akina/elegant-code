@@ -1,0 +1,35 @@
+server:
+  port: 5258
+elegent:
+  builder:
+    db-type-list:
+      - name: MYSQL
+        url: jdbc:mysql://${ip}:${port}/?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&useSSL=true
+        port: 3306
+        username: root
+        password: HuangShu_2023
+        driver: com.mysql.cj.jdbc.Driver
+      - name: ORACLE
+        url: jdbc:oracle:thin:@${ip}:${port}:ORCL
+        port: 1521
+        username: root
+        password: root
+        driver: oracle.jdbc.driver.OracleDriver
+      - name: PostgreSQL
+        url: jdbc:postgresql://${ip}:${port}/database_name
+        port: 5432
+        username: root
+        password: root
+        driver: org.postgresql.Driver
+      - name: SQLServer
+        url: jdbc:sqlserver://${ip}:${port};databaseName=database_name
+        port: 1433
+        username: root
+        password: root
+        driver: com.microsoft.sqlserver.jdbc.SQLServerDriver
+      - name: SQLite
+        url: jdbc:sqlite:/path/to/database_file.db
+        username: root
+        password: root
+        driver: org.sqlite.JDBC
+
