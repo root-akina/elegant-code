@@ -21,9 +21,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>
            <#foreach column in table.columns> 
 		    <#if column.type=='VARCHAR' >
-                 <if test="${column.name} != null  and ${column.name} != ''"> and ${column.name} like concat('%', <#noparse>#{</#noparse>${column.name}<#noparse>}</#noparse>, '%')</if>
+                 <if test="${column.property} != null  and ${column.property} != ''"> and ${column.name} like concat('%', <#noparse>#{</#noparse>${column.property}<#noparse>}</#noparse>, '%')</if>
             <#else>
-                 <if test="${column.name} != null "> and ${column.name} = <#noparse>#{</#noparse>${column.name}<#noparse>}</#noparse> </if>
+                 <if test="${column.property} != null "> and ${column.name} = <#noparse>#{</#noparse>${column.property}<#noparse>}</#noparse> </if>
             </#if> 
 	       </#foreach>
         </where>
@@ -41,14 +41,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
            <#foreach column in table.columns> 
 		     <#if column.key==false> 
-			    <if test="${column.name} != null">${column.name},</if>
+			    <if test="${column.property} != null">${column.name},</if>
 			 </#if>
            </#foreach>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
            <#foreach column in table.columns> 
 		     <#if column.key==false> 
-			    <if test="${column.name} != null"><#noparse>#{</#noparse>${column.name}<#noparse>}</#noparse>,</if>
+			    <if test="${column.property} != null"><#noparse>#{</#noparse>${column.property}<#noparse>}</#noparse>,</if>
 			 </#if>
            </#foreach>
         </trim>
@@ -59,7 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
 		   <#foreach column in table.columns> 
 		     <#if column.key==false> 
-				<if test="${column.name} != null">${column.name} = <#noparse>#{</#noparse>${column.name}<#noparse>}</#noparse> ,</if>
+				<if test="${column.property} != null">${column.name} = <#noparse>#{</#noparse>${column.property}<#noparse>}</#noparse> ,</if>
 			 </#if>
            </#foreach>
         </trim>
