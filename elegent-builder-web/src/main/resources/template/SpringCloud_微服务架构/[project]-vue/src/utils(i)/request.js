@@ -18,6 +18,7 @@ service.interceptors.request.use(
     // do something before request is sent
     if (getToken()) {
       config.headers['user-token'] = getToken();
+      config.headers['login-type'] ="admin";
       console.log('设置头部传递user-token:' + config.headers['user-token'])
     }
     return config
@@ -42,8 +43,9 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
-    console.info("最终返回结果："+response);
+    console.info("最终返回结果："+JSON.stringify(response));
     const res = response.data;
+    
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 200) {
       if (res.code === 1007) {

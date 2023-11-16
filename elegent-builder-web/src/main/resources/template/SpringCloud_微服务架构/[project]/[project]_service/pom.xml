@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>service_common</module>
+		<module>authservice</module>
 		<#foreach db in base.schemas>
         <module>${db.name}_service</module>
 		</#foreach>

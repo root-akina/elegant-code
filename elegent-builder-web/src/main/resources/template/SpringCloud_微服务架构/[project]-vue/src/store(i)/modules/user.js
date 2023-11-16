@@ -37,8 +37,8 @@ const actions = {
     return new Promise((resolve, reject) => {
       login(userInfo.code,userInfo.username,userInfo.password,userInfo.mobile,userInfo.authCode,userInfo.loginType).then(response => {
         const datas  = response.data;
-        console.info("返回的登录信息："+JSON.stringify(datas));
-        setToken(datas.userToken);
+        //console.info("返回的登录信息："+JSON.stringify(datas));
+        setToken(datas.tokenDetails.accessToken);
         resolve()
       }).catch(error => {
         reject(error)
@@ -55,7 +55,7 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const { roleLabels, username, realName,id,resourceLabels} = data;
+        const { roleLabels, username, realName,id,resourceRequestPaths} = data;
         // roles must be a non-empty array
         if (!roleLabels || roleLabels.length <= 0) {
           reject('getInfo: roles must be a non-null array!')
@@ -64,7 +64,7 @@ const actions = {
         commit('SET_ROLES', roleLabels);
         commit('SET_NAME', username);
 
-        commit('SET_INTRODUCTION', resourceLabels);
+        commit('SET_INTRODUCTION', resourceRequestPaths);
         resolve(data)
       }).catch(error => {
         reject(error)

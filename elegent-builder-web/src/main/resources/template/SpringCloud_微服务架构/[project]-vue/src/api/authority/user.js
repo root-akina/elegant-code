@@ -5,10 +5,11 @@ export function login(code,username,password,mobile,authCode,loginType) {
   console.log("=====登录信息：====="+username,password,mobile,authCode,loginType);
   const data = {
     "username":username,
-    "password":password
+    "password":password,
+    "type":"admin"
   };
   return request({
-    url: 'login',
+    url: 'auth/login',
     method: 'post',
     headers:{
       'Content-Type':"application/json"
@@ -19,21 +20,24 @@ export function login(code,username,password,mobile,authCode,loginType) {
 
 export function logout() {
   return request({
-    url: 'security/logout',
+    url: 'auth/user/logout',
     method: 'post'
   })
 }
 
 export function getInfo() {
   return request({
-    url: 'user/current-user',
-    method: 'get'
+    url: 'auth/user/current-user',
+    method: 'get',
+    headers:{
+      "login-type":"admin"
+    }
   })
 }
 
 export function initRoles(data) {
   return request({
-    url: 'role/list',
+    url: 'auth/role/list',
     method: 'post',
     data,
   })
@@ -42,7 +46,7 @@ export function initRoles(data) {
 export function fetchList(data) {
   console.log('查询用户列表参数：' + data);
   return request({
-    url: 'user/page/'+data.pageNum+"/"+data.pageSize,
+    url: 'auth/user/page/'+data.pageNum+"/"+data.pageSize,
     method: 'post',
     data,
   })
@@ -50,7 +54,7 @@ export function fetchList(data) {
 
 export function createInfo(data) {
   return request({
-    url: 'user',
+    url: 'auth/user',
     method: 'put',
     data,
   })
@@ -58,7 +62,7 @@ export function createInfo(data) {
 
 export function resetPasswords(data) {
   return request({
-    url: 'user/reset-passwords/'+data,
+    url: 'auth/user/reset-passwords/'+data,
     method: 'post',
   })
 }
@@ -67,7 +71,7 @@ export function resetPasswords(data) {
 export function updateInfo(data) {
   console.log('修改用户信息：' + data);
   return request({
-    url: 'user',
+    url: 'auth/user',
     method: 'patch',
     data,
   })

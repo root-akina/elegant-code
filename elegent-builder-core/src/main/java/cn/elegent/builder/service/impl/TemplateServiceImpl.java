@@ -4,7 +4,6 @@ import cn.elegent.builder.service.TemplateService;
 import cn.elegent.builder.util.StringUtils;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import freemarker.template.TemplateModelException;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;

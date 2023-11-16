@@ -25,6 +25,8 @@ public class Base {
 
     private String outputPath;//输出目录
 
+    private DBConnection conn;//连接对象
+
     private Map<String,String> extend;//扩展
 
     private List<Info> extendList;//扩展列表

@@ -378,7 +378,8 @@
            project: '',
            schemas:[],
            extendList:[],
-           optionList:[]
+           optionList:[],
+           conn:{}
         },
         db_type_list:[],
         isReadOnly:true,
@@ -453,7 +454,7 @@
                     return ;
                 }
                 this.runVisible = true;
-
+                this.base.conn = this.db;
                 axios.post('/template/build', this.base )
                   .then(response => {
                          this.runVisible = false;
