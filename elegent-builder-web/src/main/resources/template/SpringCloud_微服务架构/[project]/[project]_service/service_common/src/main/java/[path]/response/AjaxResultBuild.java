@@ -1,4 +1,5 @@
-package ${base.basePackage}.common;
+package ${base.basePackage}.response;
+
 import java.time.LocalDateTime;
 
 /**

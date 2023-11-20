@@ -33,6 +33,15 @@
             @click="handleUpdate">
             {{ $t('table.edit') }}
           </el-button>
+
+	  <el-button
+            class="filter-item"
+            style="margin-left: 10px;"
+            type="danger"
+            icon="el-icon-delete"
+            @click="deleteData">
+            {{ $t('table.delete') }}
+          </el-button>
         </div>
 
         <el-table
@@ -106,7 +115,7 @@
 </template>
 
 <script>
-import { fetchList, createInfo, updateInfo } from '@/api/${db.name}/${table.name}'
+import { fetchList, createInfo, updateInfo, deleteInfo } from '@/api/${db.name}/${table.name}'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
@@ -227,14 +236,15 @@ export default {
         if (valid) {
           createInfo(this.temp).then(response => {
             //this.temp = response.data;
-            this.list.push(this.temp);
+            //this.list.push(this.temp);
             this.dialogFormVisible = false;
             this.$message({
               message: '保存成功',
               type: 'success',
               duration: 1500,
               offset: 300
-            })
+            });
+	    this.getList();
           })
         }
       })
@@ -282,6 +292,31 @@ export default {
             })
           })
         }
+      })
+    },
+    deleteData() {
+
+      const rows = this.$refs.multipleTable.selection
+      if (rows.length === 0) {
+        this.$message({
+          message: '请选择要删除的记录',
+          type: 'warning',
+          duration: 1500,
+          offset: 300
+        });
+        return
+      }
+
+      const ids = rows.map(obj => obj.${table.key});
+
+      deleteInfo(ids).then(() => {
+        this.$message({
+          message: '删除成功',
+          type: 'success',
+          duration: 1500,
+          offset: 300
+        })
+        this.getList();
       })
     }
   }

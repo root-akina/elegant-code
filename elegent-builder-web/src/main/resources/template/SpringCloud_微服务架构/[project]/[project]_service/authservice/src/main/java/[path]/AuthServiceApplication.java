@@ -15,9 +15,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @SpringBootApplication
 @MapperScan("${base.basePackage}.mapper")
-public class LkdUserServiceApplication {
+public class AuthServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run( LkdUserServiceApplication.class, args);
+        SpringApplication.run( AuthServiceApplication.class, args);
     }
 }

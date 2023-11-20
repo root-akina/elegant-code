@@ -11,38 +11,41 @@ public class Pager<T> implements Serializable{
     /**
      * 当前页码
      */
-    private long pageIndex;
+    private long current;
     /**
      * 每页数量
      */
-    private long pageSize;
+    private long size;
     /**
      * 总页数
      */
-    private long totalPage;
+    //private long totalPage;
     /**
      * 总数据数量
      */
-    private long totalCount;
+    private long total;
     /**
      * 当前页数据
      */
-    private List<T> currentPageRecords;
-    public long getTotalPage(){
-        if(pageSize == 0) return 0;
-        totalPage = totalCount%pageSize ==0? (totalCount/pageSize) : (totalCount/pageSize) +1;
+    private List<T> records;
 
-        return totalPage;
+
+    public long getTotalPage(){
+        //if(pageSize == 0) return 0;
+        //totalPage = totalCount%pageSize ==0? (totalCount/pageSize) : (totalCount/pageSize) +1;
+
+        return 0;
     }
 
+    
 
-    <#if option.persistence="mybatis">
+	<#if option.persistence="mybatis">
     public static <T> Pager<T> build(com.github.pagehelper.PageInfo<T> pageInfo){
         Pager<T> pageResult = new Pager<>();
-        pageResult.setCurrentPageRecords(pageInfo.getList());
-        pageResult.setPageIndex(pageInfo.getPageNum());
-        pageResult.setPageSize(pageInfo.getPageSize());
-        pageResult.setTotalCount(pageInfo.getTotal());
+        pageResult.setRecords(pageInfo.getList());
+        pageResult.setCurrent(pageInfo.getPageNum());
+        pageResult.setSize(pageInfo.getPageSize());
+        pageResult.setTotal(pageInfo.getTotal());
         return pageResult;
     }
 	</#if>
@@ -51,14 +54,15 @@ public class Pager<T> implements Serializable{
     <#if option.persistence="mybatisPlus">
     public static <T> Pager<T> build(com.baomidou.mybatisplus.extension.plugins.pagination.Page<T> page){
         Pager<T> pageResult = new Pager<>();
-        pageResult.setCurrentPageRecords(page.getRecords());
-        pageResult.setPageIndex(page.getCurrent());
-        pageResult.setPageSize(page.getSize());
-        pageResult.setTotalCount(page.getTotal());
+        pageResult.setRecords(page.getRecords());
+        pageResult.setCurrent(page.getCurrent());
+        pageResult.setSize(page.getSize());
+        pageResult.setTotal(page.getTotal());
 
         return pageResult;
     }
     </#if>
+
 
 
 
@@ -69,10 +73,10 @@ public class Pager<T> implements Serializable{
      */
     public static <T> Pager<T> buildEmpty(){
         Pager<T> pageResult = new Pager<>();
-        pageResult.setCurrentPageRecords(Lists.newArrayList());
-        pageResult.setPageIndex(0);
-        pageResult.setPageSize(0);
-        pageResult.setTotalCount(0);
+        pageResult.setRecords(Lists.newArrayList());
+        pageResult.setCurrent(0);
+        pageResult.setSize(0);
+        pageResult.setTotal(0);
 
         return pageResult;
     }
@@ -85,11 +89,10 @@ public class Pager<T> implements Serializable{
      */
     public static <T> Pager<T> build( Pager pager ,List<T> list ){
         Pager<T> pageResult = new Pager<>();
-        pageResult.setCurrentPageRecords(list);
-        pageResult.setPageIndex(pager.getPageIndex());
-        pageResult.setPageSize(pager.getPageSize());
-        pageResult.setTotalCount(pager.getTotalCount());
-
+        pageResult.setRecords(list);
+        pageResult.setCurrent(pager.getCurrent());
+        pageResult.setSize(pager.getSize());
+        pageResult.setTotal(pager.getTotal());
         return pageResult;
     }
 

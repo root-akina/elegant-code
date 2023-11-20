@@ -1,4 +1,4 @@
-package ${base.basePackage}.common;
+package ${base.basePackage}.response;
 
 import com.alibaba.fastjson.JSON;
 import org.springframework.core.MethodParameter;

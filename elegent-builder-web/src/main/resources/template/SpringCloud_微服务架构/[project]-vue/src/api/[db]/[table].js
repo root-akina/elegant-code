@@ -29,4 +29,13 @@ export function updateInfo(data,id) {
 }
 
 
+export function deleteInfo(ids) {
+ 
+  return request({
+    url: '${db.serviceName}-service/${table.varName}/delete/ids?ids='+ids,
+    method: 'delete'
+  })
+}
+
+
 

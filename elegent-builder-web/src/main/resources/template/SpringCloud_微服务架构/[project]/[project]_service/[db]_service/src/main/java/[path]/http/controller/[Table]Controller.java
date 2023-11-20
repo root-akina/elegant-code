@@ -81,5 +81,16 @@ public class ${table.className}Controller {
         ${table.varName}Service.removeById( id );
     }
 
+    /**
+     * 根据classId删除
+     * @param ids
+     * @return 实体
+     */
+    @DeleteMapping("/delete/ids")
+    public void deleteIds(@RequestParam List<${table.keyType}> ids){
+        ${table.varName}Service.removeByIds(ids);
+    }
+
+
 
 }
